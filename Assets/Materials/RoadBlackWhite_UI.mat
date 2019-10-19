@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: RoadBlackWhite_UI
+  m_Shader: {fileID: -6465566751694194690, guid: 75a4ee64b1942fc42866d61a8f5a87af,
+    type: 3}
+  m_ShaderKeywords: ETC1_EXTERNAL_ALPHA
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Texture2DAsset_162C16F5_Out_0:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Texture2DAsset_9EB39A17_Out_0:
+        m_Texture: {fileID: 2800000, guid: 799ff69ee9ea3ff48826ccf53c6c4057, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - Vector1_20F04DE2: 1
+    - Vector1_52F6E840: 0.3
+    - Vector1_61D44950: 0.7
+    - Vector1_D66E80BF: 5
+    m_Colors:
+    - Color_81E6FD9A: {r: 0.1981132, g: 0.4922551, b: 1, a: 0}
+    - Color_C9A39AC6: {r: 0.51424354, g: 1, b: 0.38679248, a: 0}
+    - Vector2_8E42CCD8: {r: -1, g: 0, b: 0, a: 0}

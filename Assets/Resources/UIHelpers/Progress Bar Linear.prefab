@@ -84,36 +84,39 @@ MonoBehaviour:
   m_GameObject: {fileID: 4628697308528961057}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 533d77b72b608974a99c722caa1fffbf, type: 3}
+  m_Script: {fileID: 11500000, guid: db74d41aecdf69a40a61056c81b71a07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _maskImage: {fileID: 4628697309702499437}
   _barImage: {fileID: 4628697308790204807}
   _minimumValue: 0
   _maximumValue: 100
-  _currentValue: 90
+  _stepValue: 1
+  _currentValue: 50
+  _progressIcon: {fileID: 0}
+  _barLeftSide: {x: -100, y: 0, z: 0}
   _gradient:
     serializedVersion: 2
-    key0: {r: 1, g: 0, b: 0, a: 1}
-    key1: {r: 0.061550736, g: 1, b: 0, a: 1}
-    key2: {r: 0.9696431, g: 1, b: 0, a: 0.8235294}
-    key3: {r: 0.44402885, g: 1, b: 0.14117646, a: 0.3529412}
-    key4: {r: 0.1283375, g: 0.9716981, b: 0.8586469, a: 0}
-    key5: {r: 0.113385566, g: 0.28340963, b: 0.8584906, a: 0}
-    key6: {r: 0.75667727, g: 0.11961554, b: 0.9056604, a: 0}
+    key0: {r: 1, g: 1, b: 1, a: 1}
+    key1: {r: 1, g: 1, b: 1, a: 1}
+    key2: {r: 0, g: 0, b: 0, a: 0}
+    key3: {r: 0, g: 0, b: 0, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
     key7: {r: 0, g: 0, b: 0, a: 0}
     ctime0: 0
     ctime1: 65535
-    ctime2: 26021
-    ctime3: 38550
-    ctime4: 47031
-    ctime5: 57054
-    ctime6: 65535
+    ctime2: 0
+    ctime3: 0
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
     ctime7: 0
     atime0: 0
     atime1: 65535
-    atime2: 36430
-    atime3: 65535
+    atime2: 0
+    atime3: 0
     atime4: 0
     atime5: 0
     atime6: 0
@@ -179,7 +182,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.15539569, g: 0.9, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -264,7 +267,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 0
-  m_FillAmount: 0.9
+  m_FillAmount: 0.5
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
