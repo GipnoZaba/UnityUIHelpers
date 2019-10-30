@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,6 +16,7 @@ namespace UIHelpers
         [SerializeField] private TextMeshProUGUI _textMeshNormalised;
         [SerializeField] private TextMeshProUGUI _textMeshValue;
         [Space(20)]
+        [SerializeField] private float _changeSpeed = 0.1f;
         [SerializeField] private float _minimumValue;
         [SerializeField] private float _maximumValue;
         [SerializeField] private int _stepValue = 1;
@@ -28,9 +30,11 @@ namespace UIHelpers
         
         private bool _isMaskImage, _isBarImage, _isProgressIconImage, _isTextMeshNormalised, _isTextMeshValue;
 
+        private Coroutine _gradualChangeCoroutine;
+
         private void Awake()
         {
-            CheckReferencesForNull();
+            Validate();
         }
 
         private void CheckReferencesForNull()
@@ -42,25 +46,52 @@ namespace UIHelpers
             _isTextMeshValue = _textMeshValue != null;
         }
 
-        public void SetFillAmount(float fillAmount)
+        public void SetFillFromValue(float value)
         {
             if (_isMaskImage == false || _isBarImage == false)
                 return;
             
-            fillAmount = CalculateFillFromValue(fillAmount);
-
-            _maskImage.fillAmount = fillAmount;
-            _barImage.color = _barGradient.Evaluate(fillAmount);
+            if (_gradualChangeCoroutine != null)
+                StopCoroutine(_gradualChangeCoroutine);
             
-            AdjustProgressPoint(fillAmount);
-            UpdateText(fillAmount);
+            _gradualChangeCoroutine = StartCoroutine(ChangeValue(value));
+        }
+
+        private IEnumerator ChangeValue(float value)
+        {
+            float preChangeFill = _maskImage.fillAmount;
+            float targetFill = CalculateFillFromValue(value);
+
+            float elapsed = 0;
+
+            while (elapsed < _changeSpeed)
+            {
+                elapsed += Time.deltaTime;
+
+                float tmpFill = Mathf.Lerp(preChangeFill, targetFill, elapsed / _changeSpeed);
+                
+                SetVisuals(tmpFill);
+
+                yield return null;
+            }
+            
+            SetVisuals(targetFill);
+        }
+
+        private void SetVisuals(float fill)
+        {
+            _maskImage.fillAmount = fill;
+            _barImage.color = _barGradient.Evaluate(fill);
+
+            AdjustProgressPoint(fill);
+            UpdateText(fill);
         }
 
         private void AdjustProgressPoint(float fillAmount)
         {
             if (_isProgressIconImage == false)
                 return;
-
+            
             _progressIcon.color = _progressPointGradient.Evaluate(fillAmount);
             _progressIcon.rectTransform.position = Vector3.Lerp(_barProgressStart, _barProgressEnd, fillAmount);
         }
@@ -94,19 +125,24 @@ namespace UIHelpers
             _barProgressStart = (corners[0] + corners[1]) / 2;
             _barProgressEnd = (corners[2] + corners[3]) / 2;
         }
-
-        private void OnValidate()
+        
+        private void Validate()
         {
             CheckReferencesForNull();
             CalculateBarEnds();
-            
+
             if (_stepValue == 0)
                 _stepValue = 1;
 
             _currentValue = _currentValue >= _maximumValue ? _maximumValue : _currentValue;
             _currentValue = _currentValue <= _minimumValue ? _minimumValue : _currentValue;
 
-            SetFillAmount(_currentValue);
+            SetFillFromValue(_currentValue);
+        }
+
+        private void OnValidate()
+        {
+            Validate();
         }
     }
 }
