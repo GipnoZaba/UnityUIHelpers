@@ -9,14 +9,18 @@ namespace UIHelpers
     [ExecuteInEditMode]
     public class ProgressBar : MonoBehaviour
     {
+        [SerializeField] private float _changeSpeed = 0.1f;
+        [SerializeField] private float _backFillChangeSpeed = 0.2f;
+        [SerializeField] private float _backFillDelay = 0.2f;
+        [Space(20)]
         [SerializeField] private Image _maskImage;
+        [SerializeField] private Image _backFillImage;
         [SerializeField] private Image _barImage;
         [SerializeField] private Image _progressIcon;
         [Space(20)] 
         [SerializeField] private TextMeshProUGUI _textMeshNormalised;
         [SerializeField] private TextMeshProUGUI _textMeshValue;
         [Space(20)]
-        [SerializeField] private float _changeSpeed = 0.1f;
         [SerializeField] private float _minimumValue;
         [SerializeField] private float _maximumValue;
         [SerializeField] private int _stepValue = 1;
@@ -31,12 +35,13 @@ namespace UIHelpers
         private bool _isMaskImage, _isBarImage, _isProgressIconImage, _isTextMeshNormalised, _isTextMeshValue;
 
         private Coroutine _gradualChangeCoroutine;
+        private Coroutine _gradualBackChangeCoroutine;
 
         private void Awake()
         {
             Validate();
         }
-
+        
         private void CheckReferencesForNull()
         {
             _isMaskImage = _maskImage != null;
@@ -53,6 +58,11 @@ namespace UIHelpers
             
             if (_gradualChangeCoroutine != null)
                 StopCoroutine(_gradualChangeCoroutine);
+
+            if (_gradualBackChangeCoroutine != null)
+            {
+                StopCoroutine(_gradualBackChangeCoroutine);
+            }
             
             _gradualChangeCoroutine = StartCoroutine(ChangeValue(value));
         }
@@ -61,13 +71,22 @@ namespace UIHelpers
         {
             float preChangeFill = _maskImage.fillAmount;
             float targetFill = CalculateFillFromValue(value);
-
+            
+            bool backFillStarted = _backFillImage == null;
+            if (!backFillStarted && preChangeFill >= _backFillImage.fillAmount)
+                _backFillImage.fillAmount = preChangeFill;
+            
             float elapsed = 0;
-
             while (elapsed < _changeSpeed)
             {
                 elapsed += Time.deltaTime;
 
+                if (backFillStarted == false && elapsed >= _backFillDelay)
+                {
+                    backFillStarted = true;
+                    _gradualBackChangeCoroutine = StartCoroutine(ChangeBackFill(targetFill));
+                }
+                
                 float tmpFill = Mathf.Lerp(preChangeFill, targetFill, elapsed / _changeSpeed);
                 
                 SetVisuals(tmpFill);
@@ -76,6 +95,26 @@ namespace UIHelpers
             }
             
             SetVisuals(targetFill);
+        }
+
+        private IEnumerator ChangeBackFill(float targetFill)
+        {
+            float preChangeFill = _backFillImage.fillAmount;
+
+            float elapsed = 0;
+
+            while (elapsed < _backFillChangeSpeed)
+            {
+                elapsed += Time.deltaTime;
+
+                float tmpFill = Mathf.Lerp(preChangeFill, targetFill, elapsed / _backFillChangeSpeed);
+
+                _backFillImage.fillAmount = tmpFill;
+
+                yield return null;
+            }
+            
+            _backFillImage.fillAmount = targetFill;
         }
 
         private void SetVisuals(float fill)
