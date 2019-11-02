@@ -1,22 +1,19 @@
 ﻿using UIHelpers;
 using UnityEditor;
+using UnityEngine;
 
 [CustomEditor(typeof(TabGroup))]
 public class TabGroupEditor : Editor
 {
     private SerializedProperty _buttonsProperty;
     private SerializedProperty _windowsProperty;
-    private SerializedProperty _defaultColorProperty;
-    private SerializedProperty _hoverColorProperty;
-    private SerializedProperty _selectColorProperty;
-    
+    private SerializedProperty _presenterProperty;
+
     private void OnEnable()
     {
         _buttonsProperty = serializedObject.FindProperty("_tabButtons");
         _windowsProperty = serializedObject.FindProperty("_tabWindows");
-        _defaultColorProperty = serializedObject.FindProperty("colorDefault");
-        _hoverColorProperty = serializedObject.FindProperty("colorOnHover");
-        _selectColorProperty = serializedObject.FindProperty("colorOnSelected");
+        _presenterProperty = serializedObject.FindProperty("_presenter");
     }
 
     public override void OnInspectorGUI()
@@ -26,14 +23,20 @@ public class TabGroupEditor : Editor
 
         EditorGUILayout.Space();
 
-        EditorGUILayout.PropertyField(_defaultColorProperty);
-        EditorGUILayout.PropertyField(_hoverColorProperty);
-        EditorGUILayout.PropertyField(_selectColorProperty);
+        EditorGUILayout.BeginHorizontal("box");
+        EditorGUIUtility.labelWidth = 80;
+        EditorGUILayout.PropertyField(_presenterProperty);
+        EditorGUILayout.EndHorizontal();
+
+        if (GUILayout.Button("Set from children"))
+        {
+            ((TabGroup) serializedObject.targetObject).AddButtonsFromChildren();
+        }
         
         EditorGUILayout.Space();
         
-        EditorGUILayout.BeginHorizontal();
         EditorGUIUtility.labelWidth = 1;
+        EditorGUILayout.BeginHorizontal("box");
         EditorGUILayout.PropertyField(_buttonsProperty, true);
         EditorGUILayout.PropertyField(_windowsProperty, true);
         EditorGUILayout.EndHorizontal();

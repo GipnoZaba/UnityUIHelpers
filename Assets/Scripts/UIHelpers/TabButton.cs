@@ -8,30 +8,35 @@ namespace UIHelpers
     [RequireComponent(typeof(Image))]
     public class TabButton : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler, IPointerExitHandler
     {
-        public UnityEvent onSelect;
-        public UnityEvent onDeselect;
+        public Image backgroundImage;
         
-        [HideInInspector] public Image image;
+        [SerializeField] private UnityEvent onSelect;
+        [SerializeField] private UnityEvent onDeselect;
+
+        [HideInInspector] public TabButtonState buttonState = TabButtonState.Idle;
         [HideInInspector] public TabGroup tabGroup;
 
         private void Awake()
-        {
-            image = GetComponent<Image>();
+        { 
+            backgroundImage = GetComponent<Image>();
         }
         
         public void OnPointerEnter(PointerEventData eventData)
         {
-            tabGroup.OnTabEnter(this);
+            if (tabGroup != null)
+                tabGroup.OnTabEnter(this);
         }
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            tabGroup.OnTabClick(this);
+            if (tabGroup != null)
+                tabGroup.OnTabClick(this);
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            tabGroup.OnTabExit(this);
+            if (tabGroup != null)
+                tabGroup.OnTabExit(this);
         }
 
         public void Select()
@@ -43,5 +48,12 @@ namespace UIHelpers
         {
             onDeselect?.Invoke();
         }
+    }
+
+    public enum TabButtonState
+    {
+        Idle,
+        Hover,
+        Selected
     }
 }

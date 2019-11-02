@@ -1,77 +1,108 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace UIHelpers
 {
     public class TabGroup : MonoBehaviour
     {
-        public Color colorDefault;
-        public Color colorOnHover;
-        public Color colorOnSelected;
+        [SerializeField] private TabPresenter _presenter;
         
+        [ContextMenuItem("Set from children", "AddButtonsFromChildren")]
         [SerializeField] private List<TabButton> _tabButtons;
         [SerializeField] private List<GameObject> _tabWindows;
 
-        private int _size;
-        private TabButton _activeButton;
-
         private void Awake()
         {
+            if (_presenter == null)
+                _presenter = GetComponent<TabPresenter>();
+        }
+
+        private void Start()
+        {
             InitButtons();
-            SetMinSize();
         }
 
         public void OnTabEnter(TabButton tabButton)
         {
-            int index = _tabButtons.IndexOf(tabButton);
-            if (index >= _size) return;
+            tabButton.buttonState = tabButton.buttonState == TabButtonState.Selected
+                ? TabButtonState.Selected
+                : TabButtonState.Hover;
 
-            if (_activeButton != tabButton)
-                tabButton.image.color = colorOnHover;
+            PresentTab(tabButton);
         }
 
         public void OnTabClick(TabButton tabButton)
         {
-            int index = _tabButtons.IndexOf(tabButton);
-            if (index >= _size) return;
-
-            if (_activeButton != null)
-            {
-                _tabWindows[_tabButtons.IndexOf(_activeButton)].SetActive(false);
-                _activeButton.Deselect();                
-            }
-
-            if (_activeButton != null)
-                _activeButton.image.color = colorDefault;
+            if (tabButton.buttonState == TabButtonState.Selected)
+                return;
             
-            _activeButton = _tabButtons[index];
-            _activeButton.Select();
-            _activeButton.image.color = colorOnSelected;
+            DeactivateActiveTab();
             
-            _tabWindows[index].SetActive(true);
+            tabButton.buttonState = TabButtonState.Selected;
+            tabButton.Select();
+            _tabWindows[_tabButtons.IndexOf(tabButton)].SetActive(true);
+
+            PresentTab(tabButton);
         }
-        
+
         public void OnTabExit(TabButton tabButton)
         {
-            int index = _tabButtons.IndexOf(tabButton);
-            if (index >= _size) return;
-
-            if (_activeButton != tabButton)
-                tabButton.image.color = colorDefault;
+            tabButton.buttonState = tabButton.buttonState == TabButtonState.Selected
+                ? TabButtonState.Selected
+                : TabButtonState.Idle;
+            
+            PresentTab(tabButton);
+        }
+        
+        private void PresentTab(TabButton tabButton)
+        {
+            if (_presenter != null)
+                _presenter.Present(tabButton, _tabWindows[_tabButtons.IndexOf(tabButton)]);
+        }
+        
+        private void DeactivateActiveTab()
+        {
+            for (int i = 0; i < _tabButtons.Count; i++)
+            {
+                if (_tabButtons[i].buttonState == TabButtonState.Selected)
+                {
+                    _tabButtons[i].buttonState = TabButtonState.Idle;
+                    _tabButtons[i].Deselect();
+                    _tabWindows[i].SetActive(false);
+                    _presenter.Present(_tabButtons[i], _tabWindows[_tabButtons.IndexOf(_tabButtons[i])]);
+                }
+            }
         }
 
         private void InitButtons()
         {
-            foreach (var button in _tabButtons)
+            foreach (var tabButton in _tabButtons)
             {
-                button.tabGroup = this;
+                tabButton.tabGroup = this;
+                PresentTab(tabButton);
             }
         }
 
-        private void SetMinSize()
+#if UNITY_EDITOR
+        private void OnValidate()
         {
-            _size = Math.Min(_tabButtons.Count, _tabWindows.Count);
+            ValidateWindowsList();
         }
+        
+        private void ValidateWindowsList()
+        {
+            if (_tabButtons.Count < _tabWindows.Count)
+                _tabWindows = _tabWindows.Take(_tabButtons.Count).ToList();
+        }
+
+        public void AddButtonsFromChildren()
+        {
+            List<TabButton> buttonsInChildren = GetComponentsInChildren<TabButton>().ToList();
+            _tabButtons.AddRange(buttonsInChildren.Except(_tabButtons));
+            
+            ValidateWindowsList();
+        }
+#endif
     }
 }
