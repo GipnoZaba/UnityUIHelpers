@@ -694,6 +694,19 @@ MonoBehaviour:
     description: 44
     buttonBackgroundImage: {fileID: 0}
     buttonIcon: {fileID: 21300000, guid: 915f7e39bd6632c458f3ac141732d571, type: 3}
+  - name: 5
+    description: 55
+    buttonBackgroundImage: {fileID: 0}
+    buttonIcon: {fileID: 21300000, guid: edf38f19c43c11b498eabbd356aed2e5, type: 3}
+  menuElements2:
+  - name: 6
+    description: 66
+    buttonBackgroundImage: {fileID: 0}
+    buttonIcon: {fileID: 21300000, guid: 0d89ef12b5bec51438f79050347deda1, type: 3}
+  - name: 7
+    description: 77
+    buttonBackgroundImage: {fileID: 0}
+    buttonIcon: {fileID: 21300000, guid: 5d3aa402c5132ab49a85dfd6b9a3f82d, type: 3}
 --- !u!4 &1429010807
 Transform:
   m_ObjectHideFlags: 0

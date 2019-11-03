@@ -56,14 +56,15 @@ namespace UIHelpers.RadialMenu
 
                 menuButton.rectTransform.localScale = Vector3.one;
                 menuButton.rectTransform.localPosition = Vector3.zero;
-                menuButton.rectTransform.rotation = Quaternion.Euler(0f, 0f, currentRotationValue);
+                menuButton.rectTransform.rotation = Quaternion.Euler(0f, 0f, -currentRotationValue);
                 currentRotationValue += rotationalIncrementalValue;
 
                 menuButton.backgroundImage.fillAmount = fillPercentage + 0.001f;
                 menuElements[i].buttonBackgroundImage = menuButton.backgroundImage;
 
                 menuButton.iconImage.sprite = menuElements[i].buttonIcon;
-                menuButton.iconRectTrasform.rotation = Quaternion.identity;
+                menuButton.iconRectTrasform.rotation = Quaternion.Euler(0,0, rotationalIncrementalValue / 2);
+                menuButton.iconRectTrasform.transform.parent.rotation = Quaternion.Euler(0,0, -rotationalIncrementalValue / 2 - rotationalIncrementalValue * i);
             }
             
             backgroundPanel.SetActive(false);
@@ -87,15 +88,12 @@ namespace UIHelpers.RadialMenu
         private void GetCurrentMenuElement()
         {
             float rotationalIcrementalValue = 360f / menuElements.Count;
-            currentMousePosition = new Vector2(Input.mousePosition.x - Screen.width / 2,
-                Input.mousePosition.y - Screen.height / 2);
+            currentMousePosition = cameraUI.ScreenToWorldPoint(new Vector2(Input.mousePosition.x, Input.mousePosition.y));
 
-            currentSelectionAngle = 90 + rotationalIcrementalValue +
-                                    Mathf.Atan2(currentMousePosition.y, currentMousePosition.x) * Mathf.Rad2Deg;
-            currentSelectionAngle = (currentSelectionAngle + 360f) % 360f;
-
+            currentSelectionAngle = 90f + Mathf.Atan2(currentMousePosition.y, currentMousePosition.x) * Mathf.Rad2Deg;
+            currentSelectionAngle = 360 - ((currentSelectionAngle + 360f) % 360);
             currentMenuItemIndex = (int) (currentSelectionAngle / rotationalIcrementalValue);
-            Debug.Log(currentSelectionAngle);
+            
             if (currentMenuItemIndex != previousMenuItemIndex)
             {
                 menuElements[previousMenuItemIndex].buttonBackgroundImage.color = normalButtonColor;
