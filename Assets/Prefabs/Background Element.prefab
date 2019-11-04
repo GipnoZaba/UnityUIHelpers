@@ -120,7 +120,7 @@ GameObject:
   - component: {fileID: 584346470659646748}
   - component: {fileID: 8980177785191857823}
   - component: {fileID: 3666772294872579516}
-  - component: {fileID: 8089560912424087131}
+  - component: {fileID: 811388766807954859}
   m_Layer: 5
   m_Name: Background Element
   m_TagString: Untagged
@@ -184,7 +184,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &8089560912424087131
+--- !u!114 &811388766807954859
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -193,10 +193,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 7813242893685647687}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a77b3648bd6d7c34e8da2a124693398f, type: 3}
+  m_Script: {fileID: 11500000, guid: 454ee69aa6131bf488f69d4de0870e93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rectTransform: {fileID: 584346470659646748}
+  buttonRectTransform: {fileID: 584346470659646748}
   backgroundImage: {fileID: 3666772294872579516}
+  iconRectTransform: {fileID: 2759973770074458593}
   iconImage: {fileID: 8875333168872909563}
-  iconRectTrasform: {fileID: 2759973770074458593}
+  iconAnchor: {fileID: 4955678656226994926}
